@@ -1,17 +1,18 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-
-app.use(bodyParser.json());
-
 app.post('/', (req, res) => {
-    console.log('Request from Dialogflow:', req.body);
-    res.json({
-        fulfillmentText: "This is a response from your webhook!"
-    });
-});
+  const intentName = req.body.queryResult.intent.displayName;
+  console.log("Intent:", intentName);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  let responseText = "Sorry, I don't understand.";
+
+  if (intentName === "Default Welcome Intent") {
+    responseText = "Hello! Welcome to Room Finder.";
+  } else if (intentName === "Default Fallback Intent") {
+    responseText = "Sorry, I didn't get that. Please try again.";
+  }
+  // Add more intent checks here as needed:
+  // else if (intentName === "Your Custom Intent Name") { responseText = "..." }
+
+  res.json({
+    fulfillmentText: responseText
+  });
 });
